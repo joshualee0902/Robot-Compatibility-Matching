@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">Gladiator Scouting</string>
+    <string name="edit_message">Enter your name</string>
+    <string name="button_send">Send</string>
+    <string name="fix_til_break">Fix It Til\' It Breaks</string>
+    <string name="comp_scouting">FRC Scouting App</string>
+    <string name="start">Start</string>
+    <string name="pre_match">Pre-Match</string>
+    <string name="team_num">Team #</string>
+    <string name="match_num">Match #</string>
+    <string name="next_page">Next</string>
+    <string name="match_auto">Match - Autonomous</string>
+    <string name="post_match">Post-Match</string>
+    <string name="home">Home</string>
+    <string name="outcome">W/D/L</string>
+    <string name ="format">team#|match#|outcome|crossLine(0 or 1)|autoUpper|autoLower|teleUpper|teleLower|wheelStage(1 or 2 or 3)|climb|totalPoints|rankingPoints|bricked(0 or 1)|comment"</string>
+    <color name="red">#E34B4B</color>
+    <color name="gold">#F1D761</color>
+    <color name="black">#000000</color>
+    <color name="blue">#5390C6</color>
+    <string name="match_teleop">Match - TeleOp</string>
+    <string name="crossed_line">Crossed Line</string>
+    <string name="upper_score">Upper Score</string>
+    <string name="lower_score">Lower Score</string>
+    <string name="back_page">Back</string>
+    <string name="wheel">Wheel</string>
+    <string name="spin">Spin</string>
+    <string name="color">Color</string>
+    <string name="climb">Climbing</string>
+    <string name="foul">Foul</string>
+    <string name="add_comment">Additional Comment</string>
+    <string name="defense">Defense</string>
+    <string name="bricked">Bricked</string>
+    <string name="ranking_points">Ranking Points</string>
+    <string name="total_points">Total Points</string>
+    <string name="submit">Submit</string>
+    <string name="data">Data</string>
+    <string-array name="defenseOption">
+        <item>Failed</item>
+        <item>Succeeded</item>
+        <item>Not Attempted</item>
+    </string-array>
+</resources>
