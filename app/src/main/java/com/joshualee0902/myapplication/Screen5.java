@@ -1,94 +1,74 @@
 package com.joshualee0902.myapplication;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class Screen5 extends AppCompatActivity {
+/** Post-match: outcome, ranking points, bricked, comment. Total points are calculated, not typed. */
+public class Screen5 extends FlowActivity {
 
-    Button back3;
-    Button next4;
-    EditText totalPoints;
-    EditText outcome;
-    ElegantNumberButton rankingPoint;
-    CheckBox checkBricked;
-    EditText comment;
-    public static String totPoints;
-    public static String windrawlose;
-    public static String rankingPoints;
-    public static String bricked;
-    public static String say;
+    private RadioGroup outcomeGroup;
+    private CounterView rankingPoints;
+    private CheckBox bricked;
+    private EditText comment;
+    private TextView totalView;
+
+    @Override
+    protected int layoutId() {
+        return R.layout.activity_screen5;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_screen5);
-
-        next4 = findViewById(R.id.next4);
-        next4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                passData();
-                openScreen6();
-                finish();
-            }
-        });
-
-        back3 = findViewById(R.id.back3);
-        back3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openScreen4();
-            }
-        });
-
-    }
-
-    public void passData() {
-        totalPoints = findViewById(R.id.totalPoints);
-        outcome = findViewById(R.id.outcome);
-        rankingPoint = findViewById(R.id.RankingPoints);
-        checkBricked = findViewById(R.id.checkBricked);
+        outcomeGroup = findViewById(R.id.outcomeGroup);
+        rankingPoints = findViewById(R.id.RankingPoints);
+        bricked = findViewById(R.id.checkBricked);
         comment = findViewById(R.id.Comment);
-        totPoints = totalPoints.getText().toString();
-        windrawlose = outcome.getText().toString();
-        rankingPoints = rankingPoint.getNumber();
-        if(checkBricked.isChecked()) {
-            bricked = "1";
-        } else {
-            bricked = "0";
+        totalView = findViewById(R.id.totalPointsAuto);
+
+        ((Button) findViewById(R.id.next4)).setOnClickListener(v -> {
+            readInputs();
+            record.recomputeTotal();
+            List<String> errors = record.validate();
+            if (errors.isEmpty()) {
+                goNext(Screen6.class);
+            } else {
+                Toast.makeText(this, joinErrors(errors), Toast.LENGTH_LONG).show();
+            }
+        });
+        ((Button) findViewById(R.id.back3)).setOnClickListener(v -> goBack());
+        start();
+    }
+
+    @Override
+    protected void readInputs() {
+        int id = outcomeGroup.getCheckedRadioButtonId();
+        record.outcome = id == R.id.outcomeW ? "W" : id == R.id.outcomeD ? "D" : id == R.id.outcomeL ? "L" : "";
+        record.rankingPoints = rankingPoints.getValue();
+        record.bricked = bricked.isChecked();
+        record.comment = comment.getText().toString();
+        record.recomputeTotal();
+    }
+
+    @Override
+    protected void populate() {
+        switch (record.outcome) {
+            case "W": outcomeGroup.check(R.id.outcomeW); break;
+            case "D": outcomeGroup.check(R.id.outcomeD); break;
+            case "L": outcomeGroup.check(R.id.outcomeL); break;
+            default: outcomeGroup.clearCheck();
         }
-        say = comment.getText().toString();
+        rankingPoints.setValue(record.rankingPoints);
+        bricked.setChecked(record.bricked);
+        comment.setText(record.comment);
+        record.recomputeTotal();
+        totalView.setText(getString(R.string.total_points_auto, record.totalPoints));
     }
-
-    public void openScreen6() {
-        Intent intent7 = new Intent(this, Screen6.class);
-        startActivity(intent7);
-    }
-
-    public void openScreen4() {
-        Intent intent8 = new Intent(this, Screen4.class);
-        startActivity(intent8);
-    }
-
-
 }
-
