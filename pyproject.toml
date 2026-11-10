@@ -1,0 +1,22 @@
+[project]
+name = "robot-compatibility-matching-analytics"
+version = "0.1.0"
+description = "Historical FRC data pipeline and alliance-partner matching analytics"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy==2.4.6",
+    "pandas==3.1.1",
+    "scikit-learn==1.9.1",
+    "scipy==1.17.1",
+    "requests==2.34.2",
+    "matplotlib==3.11.2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==9.2.0"]
+
+[tool.setuptools]
+packages = ["analytics"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
