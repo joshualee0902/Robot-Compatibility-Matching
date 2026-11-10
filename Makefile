@@ -1,6 +1,6 @@
 PY ?= .venv/bin/python
 
-.PHONY: setup data opr-eval backtest test
+.PHONY: setup data opr-eval backtest export test
 
 setup:
 	python3 -m venv .venv
@@ -19,6 +19,11 @@ opr-eval:
 # Needs `make data` first. Writes reports/backtest_results.{csv,md} and fitted_weights.{json,md}.
 backtest:
 	$(PY) -m analytics.backtest
+
+# Needs `make data` first. Writes app/src/main/assets/model_params.json (bundled into the app).
+# Add ARGS="--snapshot 2020xxxx" to also write reports/snapshot_<event>.csv for the app's import.
+export:
+	$(PY) -m analytics.export $(ARGS)
 
 test:
 	$(PY) -m pytest -q

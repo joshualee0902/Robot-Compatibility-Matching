@@ -18,6 +18,7 @@ from analytics.opr import team_ratings
 TBA_FEATURES = ("auto_opr", "teleop_opr", "endgame_opr")
 SCOUTING_FEATURES = ("defense", "climb_rate", "bricked_rate", "foul_rate")
 DEFAULT_PRIOR_STRENGTH = 5.0
+ZERO_STD = 1e-12   # std at or below this counts as constant (same rule in the Java engine)
 
 
 def shrink(team_value, n, event_mean, m):
@@ -29,7 +30,8 @@ def shrink(team_value, n, event_mean, m):
 def zscore(df: pd.DataFrame) -> pd.DataFrame:
     """Z-score each column within the table (population std). Constant or all-NaN columns -> 0."""
     mean = df.mean()
-    std = df.std(ddof=0).replace(0, np.nan)
+    std = df.std(ddof=0)
+    std = std.where(std > ZERO_STD)       # tolerance, so float noise in a constant column is not amplified
     return ((df - mean) / std).fillna(0.0)
 
 
@@ -53,10 +55,25 @@ def scouting_features(scouting: pd.DataFrame, teams, m: float = DEFAULT_PRIOR_ST
     return out
 
 
+def assemble(ratings: pd.DataFrame, scouting: pd.DataFrame | None = None,
+             m: float = DEFAULT_PRIOR_STRENGTH, names=None) -> pd.DataFrame:
+    """Z-scored feature table from raw TBA-derived `ratings` (columns TBA_FEATURES, index = team)
+    plus optional scouting. If `names` is given, return exactly those columns in that order;
+    any requested scouting feature with no scouting data is 0 (neutral). This is the reference
+    that the Java FeatureBuilder must match."""
+    table = ratings[list(TBA_FEATURES)]
+    if scouting is not None and len(scouting):
+        table = table.join(scouting_features(scouting, table.index, m))
+    z = zscore(table)
+    if names is not None:
+        for n in names:
+            if n not in z.columns:
+                z[n] = 0.0
+        z = z[list(names)]
+    return z
+
+
 def feature_table(qm: pd.DataFrame, lam: float, scouting: pd.DataFrame | None = None,
                   m: float = DEFAULT_PRIOR_STRENGTH, upto: int | None = None) -> pd.DataFrame:
     """Z-scored feature table (index = team) from the first `upto` qualification matches."""
-    ratings = team_ratings(qm, lam, upto)[list(TBA_FEATURES)]
-    if scouting is not None and len(scouting):
-        ratings = ratings.join(scouting_features(scouting, ratings.index, m))
-    return zscore(ratings)
+    return assemble(team_ratings(qm, lam, upto)[list(TBA_FEATURES)], scouting, m)

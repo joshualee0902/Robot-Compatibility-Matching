@@ -4,9 +4,10 @@ An Android scouting app for the FRC *Infinite Recharge* game, plus an analytics 
 choosing alliance partners: robot contribution estimates (OPR), complementary k-NN
 matching, and a backtest on real historical events.
 
-> **Status: work in progress.** Milestones 1 to 4 are written as code, but the
+> **Status: work in progress.** Milestones 1 to 5 are written as code, but the
 > analytics have **never been run on real data** (no API key yet), so this README reports **no
-> results**. Milestones 5 and 6 (on-device engine, polish) are **not built yet**.
+> results**, and no fitted `model_params.json` is bundled in the app yet. Milestone 6 (CI, generated
+> results, screenshots) is **not built yet**.
 > Every number reported here will be generated from code in this repo and written to
 > `reports/`, never typed by hand.
 
@@ -16,7 +17,7 @@ matching, and a backtest on real historical events.
 | 2 | Historical data pipeline (The Blue Alliance) | Code done. Offline tests pass; `make data` **not yet run** (needs an API key) |
 | 3 | Contribution model (OPR, ridge OPR) | Code done. Synthetic-data tests pass; `make opr-eval` **not yet run** on real data |
 | 4 | Complementary k-NN matching and backtest | Code done. Synthetic-data tests pass; `make backtest` **not yet run** on real data |
-| 5 | On-device Alliance Selection screen | Not started |
+| 5 | On-device Alliance Selection screen | Code done. Java engine passes the Python parity fixtures on the JVM; the screen has not been run on a device; **no fitted model is bundled** |
 | 6 | CI, generated results, screenshots | Not started |
 
 PySpark (optional in the PRD) was deliberately skipped.
@@ -40,13 +41,14 @@ analytics/
   features.py           feature vectors, shrinkage, z-scoring
   matching.py           complementary k-NN, baselines, live Draft state
   backtest.py           simulation, metrics, bootstrap CIs
+  export.py             model_params.json, snapshot CSV, Python reference session
 tests/                  pytest tests; fixtures/ are SYNTHETIC (see tests/fixtures/README.md)
 reports/                generated tables (data_counts.md / .json after `make data`)
-Makefile                setup, data, opr-eval, backtest, test
+Makefile                setup, data, opr-eval, backtest, export, test
 pyproject.toml          pinned Python dependencies
 ```
 
-Planned, not yet present: `export.py`, and the Android Alliance Selection screen.
+Planned, not yet present: nothing from the PRD's file list; CI (Milestone 6) is still to do.
 
 ## Android app (Milestone 1)
 
@@ -78,6 +80,38 @@ Run the tests (needs Android Studio / the Android SDK):
 
 Known limitations: going Back from the data screen and submitting again saves a second
 copy of the match; the v1 to v2 database migration has not been tested on a real v1 file.
+
+## Alliance Selection (Milestone 5)
+
+The app ranks partners fully offline using the same logic as the Python reference. Pieces:
+
+- `model_params.json` (versioned, `schema_version` 1) holds feature names, distance weights,
+  the winning profile, the scouting shrinkage prior and the normalization rule.
+  `make export` writes it to `app/src/main/assets/` from a real fit (after `make data`).
+  **It is not committed, so a fresh build shows "No model_params.json is bundled"** until you
+  run `make export`. I did not ship made-up weights.
+- A **TBA snapshot** CSV of raw per-team ratings, made with
+  `make export ARGS="--snapshot 2020xxxx"` (writes `reports/snapshot_2020xxxx.csv`) and imported
+  in the app. It is stored in SQLite (database v3), so the screen works offline afterwards.
+- Local scouting data from the scouting screens feeds the scouting features when the model uses them.
+- Screen: enter your team, tap *Rank partners*, then *Pick* (ours) or *Gone* (taken or declined by
+  others). The list re-ranks immediately and the target is recomputed after your first pick.
+  Each row shows the candidate's z-scored features and which feature fits best or worst.
+- Java engine: `ModelParams`, `FeatureBuilder` (shrinkage, z-scoring), `PartnerMatcher`
+  (target, distance, `Draft`), `SnapshotCsv`. All plain Java, no Android classes.
+
+**Parity.** `tests/parity_cases.py` runs the Python reference on 5 seeded **synthetic** cases
+(TBA-only, with scouting, scouting requested but absent, a NaN rating, feature subset/order) and
+saves inputs plus expected output to `tests/fixtures/parity/`. pytest checks the committed files
+equal a fresh generation; the Java `ParityTest` must reproduce every z-feature, target, ranking,
+distance and per-feature contribution to 1e-9. If you change the Python reference, regenerate with
+`python tests/parity_cases.py --write`. Ties are broken by team number in both languages; exact
+float ties between different vectors are not covered.
+
+Differences worth knowing: the historical backtest has no scouting data, so fitted models use only
+the three Blue Alliance features; scouting features are implemented and parity-tested but only
+influence ranking if a future model includes them in `features`. When a requested scouting feature
+has no scouting data at all, it is 0 (neutral).
 
 ## Data (Milestone 2)
 
@@ -169,11 +203,15 @@ from `reports/` after the first real run.
 
 ## Screenshots
 
-Not yet available. The Alliance Selection screen does not exist yet.
+Not yet available. The Alliance Selection screen is written but has not been run on a device
+or emulator, so there are no screenshots.
 
 ## Limitations
 
-- Milestones 5 and 6 are not implemented, and nothing under "Methods" has been run on real data.
+- Milestone 6 is not implemented, and nothing under "Methods" has been run on real data.
+- The Alliance Selection screen has not been built or run on a device, and no fitted model is bundled.
+- `activity_main.xml` referenced a missing `@drawable/infinite_recharge` image, which would have broken
+  the build. I removed that ImageView; add the image back if you have it.
 - The Android build and Espresso test have not been run on a device or emulator.
 - Total-point scoring constants in the app are assumptions pending a check against the
   game manual.

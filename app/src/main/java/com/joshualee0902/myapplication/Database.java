@@ -10,17 +10,20 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Local SQLite store. Schema versions:
  * v1 - original table (strings for flags, wheel 1/2/3, climb "Climbed"/"Did not Climb").
+ * v3 - adds the `snapshot` table (imported TBA ratings used by Alliance Selection).
  * v2 - adds DEFENSE_RATING and DEFENDED_AGAINST, normalises flags to 0/1 and wheel to a
  *      bitmask. Upgrading migrates in place; scouted data is never dropped.
  */
 public class Database extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "info.db";
-    public static final int SCHEMA_VERSION = 2;
+    public static final int SCHEMA_VERSION = 3;
+    public static final String SNAPSHOT_TABLE = "snapshot";
     public static final String TABLE_NAME = "data";
     public static final String COL_TEAM = "TEAM_NUM";
     public static final String COL_MATCH = "MATCH_NUM";
@@ -53,6 +56,12 @@ public class Database extends SQLiteOpenHelper {
                 + COL_CLIMB + " TEXT, " + COL_FOULS + " INTEGER, " + COL_TOTAL + " INTEGER, "
                 + COL_RP + " INTEGER, " + COL_BRICKED + " TEXT, " + COL_COMMENT + " TEXT, "
                 + COL_DEFENSE + " INTEGER DEFAULT 0, " + COL_DEFENDED + " INTEGER DEFAULT 0)");
+        createSnapshotTable(db);
+    }
+
+    private static void createSnapshotTable(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + SNAPSHOT_TABLE + " (TEAM INTEGER PRIMARY KEY, EVENT_KEY TEXT, "
+                + "AUTO_OPR REAL, TELEOP_OPR REAL, ENDGAME_OPR REAL)");
     }
 
     @Override
@@ -71,6 +80,52 @@ public class Database extends SQLiteOpenHelper {
             } finally {
                 db.endTransaction();
             }
+        }
+        if (oldVersion < 3) {
+            createSnapshotTable(db);
+        }
+    }
+
+    /** Replaces the stored TBA snapshot (one event at a time). NaN ratings are stored as NULL. */
+    public void replaceSnapshot(String eventKey, TreeMap<Integer, double[]> ratings) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+            db.delete(SNAPSHOT_TABLE, null, null);
+            for (java.util.Map.Entry<Integer, double[]> e : ratings.entrySet()) {
+                ContentValues cv = new ContentValues();
+                cv.put("TEAM", e.getKey());
+                cv.put("EVENT_KEY", eventKey);
+                String[] cols = {"AUTO_OPR", "TELEOP_OPR", "ENDGAME_OPR"};
+                for (int j = 0; j < 3; j++) {
+                    double v = e.getValue()[j];
+                    if (Double.isNaN(v)) cv.putNull(cols[j]);
+                    else cv.put(cols[j], v);
+                }
+                db.insert(SNAPSHOT_TABLE, null, cv);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public TreeMap<Integer, double[]> getSnapshot() {
+        TreeMap<Integer, double[]> out = new TreeMap<>();
+        try (Cursor c = getReadableDatabase().rawQuery(
+                "SELECT TEAM, AUTO_OPR, TELEOP_OPR, ENDGAME_OPR FROM " + SNAPSHOT_TABLE, null)) {
+            while (c.moveToNext()) {
+                double[] v = new double[3];
+                for (int j = 0; j < 3; j++) v[j] = c.isNull(j + 1) ? Double.NaN : c.getDouble(j + 1);
+                out.put(c.getInt(0), v);
+            }
+        }
+        return out;
+    }
+
+    public String getSnapshotEventKey() {
+        try (Cursor c = getReadableDatabase().rawQuery("SELECT EVENT_KEY FROM " + SNAPSHOT_TABLE + " LIMIT 1", null)) {
+            return c.moveToFirst() ? c.getString(0) : null;
         }
     }
 
