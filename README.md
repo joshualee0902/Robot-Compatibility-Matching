@@ -4,9 +4,9 @@ An Android scouting app for the FRC *Infinite Recharge* game, plus an analytics 
 choosing alliance partners: robot contribution estimates (OPR), complementary k-NN
 matching, and a backtest on real historical events.
 
-> **Status: work in progress.** Milestones 1 and 2 are implemented. Milestones 3 to 6
-> (contribution model, matching, backtest, on-device engine) are **not built yet**.
-> This README describes them as planned and reports **no results**, because none exist.
+> **Status: work in progress.** Milestones 1 to 4 are written as code, but the
+> analytics have **never been run on real data** (no API key yet), so this README reports **no
+> results**. Milestones 5 and 6 (on-device engine, polish) are **not built yet**.
 > Every number reported here will be generated from code in this repo and written to
 > `reports/`, never typed by hand.
 
