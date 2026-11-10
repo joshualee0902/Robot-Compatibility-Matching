@@ -32,7 +32,8 @@ public class ParityTest {
         throw new IllegalStateException("parity fixtures not found from " + new File(".").getAbsolutePath());
     }
 
-    private static double num(JSONObject o, String key) {
+    // JSONException is checked under Android's stub org.json, so declare it.
+    private static double num(JSONObject o, String key) throws org.json.JSONException {
         return o.isNull(key) ? Double.NaN : o.getDouble(key);
     }
 
