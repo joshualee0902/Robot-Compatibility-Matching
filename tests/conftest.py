@@ -22,6 +22,9 @@ class FakeClient:
     def event_alliances(self, key):
         return load("alliances_2020test")
 
+    def event_rankings(self, key):
+        return load("rankings_2020test")
+
 
 @pytest.fixture
 def fake_client():

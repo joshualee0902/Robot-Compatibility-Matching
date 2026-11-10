@@ -1,6 +1,6 @@
 PY ?= .venv/bin/python
 
-.PHONY: setup data opr-eval test
+.PHONY: setup data opr-eval backtest test
 
 setup:
 	python3 -m venv .venv
@@ -15,6 +15,10 @@ data:
 # Needs `make data` first. Writes reports/opr_mae_by_k.{png,csv,md}.
 opr-eval:
 	$(PY) -m analytics.opr
+
+# Needs `make data` first. Writes reports/backtest_results.{csv,md} and fitted_weights.{json,md}.
+backtest:
+	$(PY) -m analytics.backtest
 
 test:
 	$(PY) -m pytest -q
