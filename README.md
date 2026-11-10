@@ -4,9 +4,9 @@ An Android scouting app for the FRC *Infinite Recharge* game, plus an analytics 
 choosing alliance partners: robot contribution estimates (OPR), complementary k-NN
 matching, and a backtest on real historical events.
 
-> **Status: work in progress.** Milestones 1 and 2 are implemented. Milestones 3 to 6
-> (contribution model, matching, backtest, on-device engine) are **not built yet**.
-> This README describes them as planned and reports **no results**, because none exist.
+> **Status: work in progress.** Milestones 1 to 4 are written as code, but the
+> analytics have **never been run on real data** (no API key yet), so this README reports **no
+> results**. Milestones 5 and 6 (on-device engine, polish) are **not built yet**.
 > Every number reported here will be generated from code in this repo and written to
 > `reports/`, never typed by hand.
 
@@ -15,7 +15,7 @@ matching, and a backtest on real historical events.
 | 1 | Scouting app fixes (single `MatchRecord`, defense, validation, CSV, migration) | Code done. JVM unit tests pass; the Android build and Espresso test have not been run |
 | 2 | Historical data pipeline (The Blue Alliance) | Code done. Offline tests pass; `make data` **not yet run** (needs an API key) |
 | 3 | Contribution model (OPR, ridge OPR) | Code done. Synthetic-data tests pass; `make opr-eval` **not yet run** on real data |
-| 4 | Complementary k-NN matching and backtest | Not started |
+| 4 | Complementary k-NN matching and backtest | Code done. Synthetic-data tests pass; `make backtest` **not yet run** on real data |
 | 5 | On-device Alliance Selection screen | Not started |
 | 6 | CI, generated results, screenshots | Not started |
 
@@ -37,14 +37,16 @@ analytics/
   tba.py                TBA API v3 client with on-disk cache
   data.py               normalize matches and alliances
   opr.py                OPR, component OPR, ridge OPR, MAE-vs-k evaluation
+  features.py           feature vectors, shrinkage, z-scoring
+  matching.py           complementary k-NN, baselines, live Draft state
+  backtest.py           simulation, metrics, bootstrap CIs
 tests/                  pytest tests; fixtures/ are SYNTHETIC (see tests/fixtures/README.md)
 reports/                generated tables (data_counts.md / .json after `make data`)
-Makefile                setup, data, opr-eval, test
+Makefile                setup, data, opr-eval, backtest, test
 pyproject.toml          pinned Python dependencies
 ```
 
-Planned, not yet present: `features.py`, `matching.py`, `backtest.py`,
-`export.py`, and the Android Alliance Selection screen.
+Planned, not yet present: `export.py`, and the Android Alliance Selection screen.
 
 ## Android app (Milestone 1)
 
@@ -104,7 +106,7 @@ Counts: **not yet available.** They will appear here from `reports/data_counts.m
 first real run. The score-breakdown field names (`autoPoints`, `initLineRobot1`, ...) follow
 the documented TBA schema and have not yet been verified against a real pull.
 
-## Methods (OPR implemented in `analytics/opr.py`; the rest planned)
+## Methods (implemented in `analytics/`; none run on real data yet)
 
 **OPR.** For one event, each row of the design matrix `A` marks the three robots on one
 alliance in one qualification match, and `s` holds that alliance's score. Solve by least
@@ -143,16 +145,27 @@ to that target (smaller is better). Plain k-NN on the captain's vector would ret
 robots; the target vector is what makes the match complementary. The second pick recomputes
 the target after the first pick is added. Baselines: rank by plain OPR, and rank by seeding.
 
-**Backtest.** For each historical event, rebuild everything from qualification data only
-and simulate each captain's first pick. Metrics: Spearman correlation with actual playoff
-performance, top-3 hit rate, and predicted strength gap versus the real choice, each with
-bootstrap 95% confidence intervals over events. The result will be reported honestly even
+**Backtest** (`make backtest`, after `make data`). Events are processed in date order. For each
+event, features, plain OPR and seeding come from that event's qualification matches only, and
+λ, the feature weights and the winning profile come only from events that started strictly
+earlier. Captains pick in seed order; each captain's pool excludes all alliance captains and the
+actual first picks made before them. I interpret the "winning profile" as the average of the
+*summed* 3-robot feature vectors of winning alliances, so the per-robot target is
+`clip((S − captain − picks so far) / picks remaining, 0)`. Alliance performance (the regression
+target and the Spearman target) is mean playoff score per match. Feature weights come from a ridge
+regression of that performance on the summed member vectors; negative coefficients get distance
+weight 0. Seeding is the official qualification rank (pulled with `make data`). Metrics, per event then averaged over events with bootstrap 95% CIs (fixed seed): Spearman
+correlation, across alliances, between the method's percentile rating of the actual first pick and the
+alliance's playoff performance; top-3 hit rate; and the predicted strength gap between the method's
+#1 recommendation and the real pick (strength = centered ridge OPR, which favors the OPR baseline).
+Paired k-NN minus OPR and k-NN minus seeding differences are reported too. The result will be reported honestly even
 if complementary k-NN does not beat plain OPR.
 
 ## Results
 
-None yet. This section will be filled with tables generated from `reports/` once
-Milestones 3 and 4 are implemented and run on real data.
+None yet. The code for Milestones 3 and 4 exists, but neither `make opr-eval` nor
+`make backtest` has been run on real data. This section will be filled with tables generated
+from `reports/` after the first real run.
 
 ## Screenshots
 
@@ -160,7 +173,7 @@ Not yet available. The Alliance Selection screen does not exist yet.
 
 ## Limitations
 
-- Milestones 4 to 6 are not implemented, and nothing under "Methods" has been run on real data.
+- Milestones 5 and 6 are not implemented, and nothing under "Methods" has been run on real data.
 - The Android build and Espresso test have not been run on a device or emulator.
 - Total-point scoring constants in the app are assumptions pending a check against the
   game manual.

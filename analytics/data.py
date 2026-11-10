@@ -115,6 +115,15 @@ def normalize_alliances(event_key: str, raw_alliances: list | None) -> list[dict
     return rows
 
 
+def normalize_rankings(event_key: str, raw: dict | None) -> list[dict]:
+    """Official qualification ranking (seeding), one row per team. TBA returns
+    {"rankings": [{"rank": 1, "team_key": "frc254", ...}, ...]} or null."""
+    rows = []
+    for r in (raw or {}).get("rankings") or []:
+        rows.append({"event_key": event_key, "team": team_number(r["team_key"]), "rank": r["rank"]})
+    return rows
+
+
 def qual_matches(matches: pd.DataFrame) -> pd.DataFrame:
     """Qualification matches only: the only matches models may be fit on."""
     return matches[matches["comp_level"] == QUAL_LEVEL].copy()
@@ -126,8 +135,9 @@ def playoff_matches(matches: pd.DataFrame) -> pd.DataFrame:
 
 
 def build_tables(client, years, event_types=DEFAULT_EVENT_TYPES, log=print):
-    """Pull and normalize every event in `years`. Returns (events, matches, alliances, stats)."""
-    events, matches, alliances = [], [], []
+    """Pull and normalize every event in `years`.
+    Returns (events, matches, alliances, rankings, stats)."""
+    events, matches, alliances, rankings = [], [], [], []
     stats = {"events_listed": 0, "events_with_matches": 0, "matches_skipped": 0}
     for year in years:
         for ev in sorted(client.events(year), key=lambda e: e["key"]):
@@ -146,11 +156,14 @@ def build_tables(client, years, event_types=DEFAULT_EVENT_TYPES, log=print):
                            "start_date": ev.get("start_date")})
             matches.extend(rows)
             alliances.extend(normalize_alliances(key, client.event_alliances(key)))
+            rankings.extend(normalize_rankings(key, client.event_rankings(key)))
             log(f"ok   {key}: {len(rows)} matches")
-    return (pd.DataFrame(events), pd.DataFrame(matches), pd.DataFrame(alliances), stats)
+    return (pd.DataFrame(events), pd.DataFrame(matches), pd.DataFrame(alliances),
+            pd.DataFrame(rankings, columns=["event_key", "team", "rank"]), stats)
 
 
-def compute_counts(events: pd.DataFrame, matches: pd.DataFrame, alliances: pd.DataFrame, stats: dict) -> dict:
+def compute_counts(events: pd.DataFrame, matches: pd.DataFrame, alliances: pd.DataFrame, stats: dict,
+                   rankings: pd.DataFrame | None = None) -> dict:
     """Counts reported in the README. Everything here is derived from the tables."""
     return {
         "events_listed": stats["events_listed"],
@@ -159,17 +172,21 @@ def compute_counts(events: pd.DataFrame, matches: pd.DataFrame, alliances: pd.Da
         "qualification_matches": int(len(qual_matches(matches))) if len(matches) else 0,
         "playoff_matches": int(len(playoff_matches(matches))) if len(matches) else 0,
         "alliances": int(len(alliances)),
+        "ranking_rows": 0 if rankings is None else int(len(rankings)),
         "unplayed_or_malformed_matches_skipped": stats["matches_skipped"],
     }
 
 
-def write_outputs(events, matches, alliances, counts, out_dir="data/processed", report_dir="reports"):
+def write_outputs(events, matches, alliances, counts, out_dir="data/processed", report_dir="reports",
+                  rankings=None):
     out, rep = Path(out_dir), Path(report_dir)
     out.mkdir(parents=True, exist_ok=True)
     rep.mkdir(parents=True, exist_ok=True)
     events.to_csv(out / "events.csv", index=False)
     matches.to_csv(out / "matches.csv", index=False)
     alliances.to_csv(out / "alliances.csv", index=False)
+    if rankings is not None:
+        rankings.to_csv(out / "rankings.csv", index=False)
     (rep / "data_counts.json").write_text(json.dumps(counts, indent=2, sort_keys=True) + "\n")
     lines = ["| Quantity | Count |", "|---|---|"]
     for k, v in counts.items():
@@ -189,9 +206,9 @@ def main(argv=None):
     args = p.parse_args(argv)
 
     client = TBAClient(cache_dir=args.cache, offline=args.offline)
-    events, matches, alliances, stats = build_tables(client, args.years)
-    counts = compute_counts(events, matches, alliances, stats)
-    write_outputs(events, matches, alliances, counts, args.out, args.report)
+    events, matches, alliances, rankings, stats = build_tables(client, args.years)
+    counts = compute_counts(events, matches, alliances, stats, rankings)
+    write_outputs(events, matches, alliances, counts, args.out, args.report, rankings)
     print(json.dumps(counts, indent=2))
 
 

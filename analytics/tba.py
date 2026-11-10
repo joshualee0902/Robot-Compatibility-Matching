@@ -89,3 +89,6 @@ class TBAClient:
 
     def event_alliances(self, event_key: str):
         return self.get(f"/event/{event_key}/alliances")
+
+    def event_rankings(self, event_key: str):
+        return self.get(f"/event/{event_key}/rankings")

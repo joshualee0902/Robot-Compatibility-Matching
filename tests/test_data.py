@@ -13,20 +13,20 @@ def tables(fake_client):
 
 
 def test_event_type_filter_and_empty_events_skipped(tables):
-    events, _, _, stats = tables
+    events, _, _, _, stats = tables
     # offseason (99) excluded by type; cancelled event has no matches
     assert list(events["event_key"]) == ["2020test"]
     assert stats["events_listed"] == 2
 
 
 def test_unplayed_matches_skipped(tables):
-    _, matches, _, stats = tables
+    _, matches, _, _, stats = tables
     assert "2020test_qm3" not in set(matches["match_key"])
     assert stats["matches_skipped"] == 1
 
 
 def test_qualification_and_playoff_are_separated(tables):
-    _, matches, _, _ = tables
+    _, matches, _, _, _ = tables
     qual = data.qual_matches(matches)
     playoff = data.playoff_matches(matches)
     assert set(qual["comp_level"]) == {"qm"}
@@ -38,7 +38,7 @@ def test_qualification_and_playoff_are_separated(tables):
 
 
 def test_per_robot_and_component_columns(tables):
-    _, matches, _, _ = tables
+    _, matches, _, _, _ = tables
     m = matches[matches["match_key"] == "2020test_qm1"].iloc[0]
     assert [m["red1"], m["red2"], m["red3"]] == [1, 2, 3]
     assert m["red_score"] == 98 and m["blue_score"] == 55
@@ -47,13 +47,13 @@ def test_per_robot_and_component_columns(tables):
 
 
 def test_missing_breakdown_is_nan_not_guessed(tables):
-    _, matches, _, _ = tables
+    _, matches, _, _, _ = tables
     m = matches[matches["match_key"] == "2020test_qm2"].iloc[0]
     assert math.isnan(m["red_auto_points"])
 
 
 def test_alliances_parsed_in_seed_order(tables):
-    _, _, alliances, _ = tables
+    _, _, alliances, _, _ = tables
     a1 = alliances[alliances["seed"] == 1].iloc[0]
     assert (a1["captain"], a1["pick1"], a1["pick2"], a1["pick3"]) == (1, 2, 3, 9)
     assert a1["playoff_status"] == "won" and a1["playoff_wins"] == 2
@@ -62,8 +62,9 @@ def test_alliances_parsed_in_seed_order(tables):
 
 
 def test_counts_derived_from_tables(tables):
-    events, matches, alliances, stats = tables
-    c = data.compute_counts(events, matches, alliances, stats)
+    events, matches, alliances, rankings, stats = tables
+    c = data.compute_counts(events, matches, alliances, stats, rankings)
+    assert c["ranking_rows"] == 3
     assert c["events_with_matches"] == 1
     assert c["qualification_matches"] == 2
     assert c["playoff_matches"] == 2
@@ -76,8 +77,14 @@ def test_bad_team_key_raises():
 
 
 def test_write_outputs(tables, tmp_path):
-    events, matches, alliances, stats = tables
-    counts = data.compute_counts(events, matches, alliances, stats)
-    data.write_outputs(events, matches, alliances, counts, tmp_path / "p", tmp_path / "r")
+    events, matches, alliances, rankings, stats = tables
+    counts = data.compute_counts(events, matches, alliances, stats, rankings)
+    data.write_outputs(events, matches, alliances, counts, tmp_path / "p", tmp_path / "r", rankings)
     assert (tmp_path / "p" / "matches.csv").exists()
     assert "qualification matches" in (tmp_path / "r" / "data_counts.md").read_text()
+
+
+def test_rankings_normalized(tables):
+    _, _, _, rankings, _ = tables
+    assert dict(zip(rankings["team"], rankings["rank"])) == {1: 1, 4: 2, 2: 3}
+    assert data.normalize_rankings("x", None) == []
