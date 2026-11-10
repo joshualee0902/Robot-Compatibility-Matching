@@ -1,0 +1,38 @@
+[
+ {
+  "name": "Alliance 1",
+  "picks": [
+   "frc1",
+   "frc2",
+   "frc3",
+   "frc9"
+  ],
+  "status": {
+   "level": "f",
+   "status": "won",
+   "playoff_average": 85.0,
+   "record": {
+    "wins": 2,
+    "losses": 0,
+    "ties": 0
+   }
+  }
+ },
+ {
+  "name": "Alliance 2",
+  "picks": [
+   "frc4",
+   "frc5",
+   "frc6"
+  ],
+  "status": {
+   "level": "f",
+   "status": "eliminated",
+   "record": {
+    "wins": 1,
+    "losses": 2,
+    "ties": 0
+   }
+  }
+ }
+]

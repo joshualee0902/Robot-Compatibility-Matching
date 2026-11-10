@@ -1,0 +1,154 @@
+[
+ {
+  "key": "2020test_qm1",
+  "comp_level": "qm",
+  "set_number": 1,
+  "match_number": 1,
+  "time": 1000,
+  "alliances": {
+   "red": {
+    "score": 98,
+    "team_keys": [
+     "frc1",
+     "frc2",
+     "frc3"
+    ]
+   },
+   "blue": {
+    "score": 55,
+    "team_keys": [
+     "frc4",
+     "frc5",
+     "frc6"
+    ]
+   }
+  },
+  "winning_alliance": "red",
+  "score_breakdown": {
+   "red": {
+    "autoPoints": 20,
+    "teleopPoints": 50,
+    "endgamePoints": 25,
+    "foulPoints": 3,
+    "totalPoints": 98,
+    "initLineRobot1": "Exited",
+    "initLineRobot2": "None",
+    "initLineRobot3": "Exited",
+    "endgameRobot1": "Hang",
+    "endgameRobot2": "None",
+    "endgameRobot3": "Park"
+   },
+   "blue": {
+    "autoPoints": 10,
+    "teleopPoints": 40,
+    "endgamePoints": 5,
+    "foulPoints": 0,
+    "totalPoints": 55
+   }
+  }
+ },
+ {
+  "key": "2020test_qm2",
+  "comp_level": "qm",
+  "set_number": 1,
+  "match_number": 2,
+  "time": 2000,
+  "alliances": {
+   "red": {
+    "score": 60,
+    "team_keys": [
+     "frc1",
+     "frc4",
+     "frc7"
+    ]
+   },
+   "blue": {
+    "score": 60,
+    "team_keys": [
+     "frc2",
+     "frc5",
+     "frc8"
+    ]
+   }
+  },
+  "winning_alliance": ""
+ },
+ {
+  "key": "2020test_qm3",
+  "comp_level": "qm",
+  "set_number": 1,
+  "match_number": 3,
+  "time": 3000,
+  "alliances": {
+   "red": {
+    "score": -1,
+    "team_keys": [
+     "frc1",
+     "frc2",
+     "frc3"
+    ]
+   },
+   "blue": {
+    "score": -1,
+    "team_keys": [
+     "frc4",
+     "frc5",
+     "frc6"
+    ]
+   }
+  },
+  "winning_alliance": ""
+ },
+ {
+  "key": "2020test_sf1m1",
+  "comp_level": "sf",
+  "set_number": 1,
+  "match_number": 1,
+  "time": 4000,
+  "alliances": {
+   "red": {
+    "score": 80,
+    "team_keys": [
+     "frc1",
+     "frc2",
+     "frc3"
+    ]
+   },
+   "blue": {
+    "score": 70,
+    "team_keys": [
+     "frc4",
+     "frc5",
+     "frc6"
+    ]
+   }
+  },
+  "winning_alliance": "red"
+ },
+ {
+  "key": "2020test_f1m1",
+  "comp_level": "f",
+  "set_number": 1,
+  "match_number": 1,
+  "time": 5000,
+  "alliances": {
+   "red": {
+    "score": 90,
+    "team_keys": [
+     "frc1",
+     "frc2",
+     "frc3"
+    ]
+   },
+   "blue": {
+    "score": 85,
+    "team_keys": [
+     "frc4",
+     "frc5",
+     "frc6"
+    ]
+   }
+  },
+  "winning_alliance": "red"
+ }
+]
