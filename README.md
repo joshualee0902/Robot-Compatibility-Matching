@@ -14,7 +14,7 @@ matching, and a backtest on real historical events.
 |---|---|---|
 | 1 | Scouting app fixes (single `MatchRecord`, defense, validation, CSV, migration) | Code done. JVM unit tests pass; the Android build and Espresso test have not been run |
 | 2 | Historical data pipeline (The Blue Alliance) | Code done. Offline tests pass; `make data` **not yet run** (needs an API key) |
-| 3 | Contribution model (OPR, ridge OPR) | Not started |
+| 3 | Contribution model (OPR, ridge OPR) | Code done. Synthetic-data tests pass; `make opr-eval` **not yet run** on real data |
 | 4 | Complementary k-NN matching and backtest | Not started |
 | 5 | On-device Alliance Selection screen | Not started |
 | 6 | CI, generated results, screenshots | Not started |
@@ -36,13 +36,14 @@ app/                    Android app (Java, SQLite)
 analytics/
   tba.py                TBA API v3 client with on-disk cache
   data.py               normalize matches and alliances
+  opr.py                OPR, component OPR, ridge OPR, MAE-vs-k evaluation
 tests/                  pytest tests; fixtures/ are SYNTHETIC (see tests/fixtures/README.md)
 reports/                generated tables (data_counts.md / .json after `make data`)
-Makefile                setup, data, test
+Makefile                setup, data, opr-eval, test
 pyproject.toml          pinned Python dependencies
 ```
 
-Planned, not yet present: `opr.py`, `features.py`, `matching.py`, `backtest.py`,
+Planned, not yet present: `features.py`, `matching.py`, `backtest.py`,
 `export.py`, and the Android Alliance Selection screen.
 
 ## Android app (Milestone 1)
@@ -103,7 +104,7 @@ Counts: **not yet available.** They will appear here from `reports/data_counts.m
 first real run. The score-breakdown field names (`autoPoints`, `initLineRobot1`, ...) follow
 the documented TBA schema and have not yet been verified against a real pull.
 
-## Methods (planned, Milestones 3 to 5)
+## Methods (OPR implemented in `analytics/opr.py`; the rest planned)
 
 **OPR.** For one event, each row of the design matrix `A` marks the three robots on one
 alliance in one qualification match, and `s` holds that alliance's score. Solve by least
@@ -122,10 +123,13 @@ Shrink it:
 x_ridge = (AᵀA + λI)⁻¹ Aᵀ s
 ```
 
-with λ chosen by time-ordered cross-validation inside past events, so there is no
-look-ahead. Evaluation: fit on the first *k* qualification matches, predict the next
-matches' alliance scores, and compare mean-score average, OPR and ridge OPR by mean
-absolute error at several *k*.
+with λ chosen using only events that started strictly before the event being evaluated
+(same k), so there is no look-ahead. The code also evaluates a *centered* variant that shrinks
+each robot toward the average robot instead of toward 0 (`x = μ + ridge(s − μ·A1)`, μ from the
+fitting rows only). The centered variant is my addition to the PRD formula; both are reported. Evaluation: fit on the first *k* qualification matches, predict the next
+matches' alliance scores, and compare mean-score average (a team's average alliance score so
+far), OPR and ridge OPR by mean absolute error at several *k*. Run `make opr-eval` after
+`make data`; it writes `reports/opr_mae_by_k.{png,csv,md}`.
 
 **Small-sample shrinkage for scouting rates.** A rate observed over *n* matches is pulled
 toward the event mean with weight `n / (n + m)`, where *m* is a tunable prior strength.
@@ -156,7 +160,7 @@ Not yet available. The Alliance Selection screen does not exist yet.
 
 ## Limitations
 
-- Milestones 3 to 6 are not implemented; nothing above under "Methods" has been run.
+- Milestones 4 to 6 are not implemented, and nothing under "Methods" has been run on real data.
 - The Android build and Espresso test have not been run on a device or emulator.
 - Total-point scoring constants in the app are assumptions pending a check against the
   game manual.
