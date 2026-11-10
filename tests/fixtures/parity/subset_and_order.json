@@ -1,0 +1,820 @@
+{
+ "actions": [
+  {
+   "n": 5,
+   "op": "recommend"
+  },
+  {
+   "op": "decline",
+   "team": 222
+  },
+  {
+   "n": 5,
+   "op": "recommend"
+  },
+  {
+   "op": "pick",
+   "team": 182
+  },
+  {
+   "op": "recommend"
+  },
+  {
+   "op": "decline",
+   "team": 250
+  },
+  {
+   "n": 3,
+   "op": "recommend"
+  }
+ ],
+ "captain": 106,
+ "expected_features": [
+  {
+   "team": 106,
+   "z": [
+    1.1038975626869472,
+    2.7072123123893266,
+    -1.264274156692319
+   ]
+  },
+  {
+   "team": 115,
+   "z": [
+    -0.7396019819939706,
+    0.06680452320138103,
+    0.641643302382459
+   ]
+  },
+  {
+   "team": 182,
+   "z": [
+    1.5139119254633002,
+    -1.5345616757085379,
+    1.233305918389737
+   ]
+  },
+  {
+   "team": 184,
+   "z": [
+    -0.617699031251463,
+    -1.2626315664596834,
+    -0.7587933585940712
+   ]
+  },
+  {
+   "team": 214,
+   "z": [
+    1.457549442135373,
+    -0.9118081539102363,
+    1.3118827570697271
+   ]
+  },
+  {
+   "team": 222,
+   "z": [
+    -0.012010047747676665,
+    0.12219769360392517,
+    1.2398142548459377
+   ]
+  },
+  {
+   "team": 236,
+   "z": [
+    -1.2332615934253113,
+    0.37423661893550203,
+    -1.4059079548105893
+   ]
+  },
+  {
+   "team": 250,
+   "z": [
+    0.7039113551547472,
+    0.12219769360392517,
+    0.7293747242096322
+   ]
+  },
+  {
+   "team": 270,
+   "z": [
+    0.44487966112176935,
+    -0.36249254741833814,
+    -1.4595719304988957
+   ]
+  },
+  {
+   "team": 284,
+   "z": [
+    0.48280888798934635,
+    1.188516223852903,
+    0.09673104458254154
+   ]
+  },
+  {
+   "team": 292,
+   "z": [
+    -0.36883074696496765,
+    -0.4109615715205648,
+    -0.10996227803745581
+   ]
+  },
+  {
+   "team": 331,
+   "z": [
+    -1.3037678332825644,
+    -0.03290318352319946,
+    -0.8333650671471683
+   ]
+  },
+  {
+   "team": 334,
+   "z": [
+    0.3156150010381782,
+    -0.03290318352319946,
+    -0.4562153135314402
+   ]
+  },
+  {
+   "team": 388,
+   "z": [
+    -1.747402600923708,
+    -0.03290318352319946,
+    1.0353380578318987
+   ]
+  }
+ ],
+ "expected_results": [
+  {
+   "ranking": [
+    {
+     "contrib": [
+      5.8966687180803706e-05,
+      0.005780985981279317,
+      0.0032705396502882237
+     ],
+     "distance": 0.09544889899180789,
+     "team": 222
+    },
+    {
+     "contrib": [
+      0.20255977383755155,
+      0.005780985981279317,
+      0.030062315264689173
+     ],
+     "distance": 0.4882653736274159,
+     "team": 250
+    },
+    {
+     "contrib": [
+      0.2236214163818853,
+      0.0017277767900184765,
+      0.04537518981464395
+     ],
+     "distance": 0.5203118132298629,
+     "team": 115
+    },
+    {
+     "contrib": [
+      0.05561238203459312,
+      0.06538502967794463,
+      0.3052855433862279
+     ],
+     "distance": 0.6529034806912624,
+     "team": 292
+    },
+    {
+     "contrib": [
+      0.040722322123251865,
+      0.0004191328861314766,
+      0.5025880023648535
+     ],
+     "distance": 0.7373801308512705,
+     "team": 334
+    }
+   ],
+   "target": [
+    0.0,
+    0.0,
+    1.1132110783461595
+   ]
+  },
+  {
+   "ranking": [
+    {
+     "contrib": [
+      0.20255977383755155,
+      0.005780985981279317,
+      0.030062315264689173
+     ],
+     "distance": 0.4882653736274159,
+     "team": 250
+    },
+    {
+     "contrib": [
+      0.2236214163818853,
+      0.0017277767900184765,
+      0.04537518981464395
+     ],
+     "distance": 0.5203118132298629,
+     "team": 115
+    },
+    {
+     "contrib": [
+      0.05561238203459312,
+      0.06538502967794463,
+      0.3052855433862279
+     ],
+     "distance": 0.6529034806912624,
+     "team": 292
+    },
+    {
+     "contrib": [
+      0.040722322123251865,
+      0.0004191328861314766,
+      0.5025880023648535
+     ],
+     "distance": 0.7373801308512705,
+     "team": 334
+    },
+    {
+     "contrib": [
+      0.09529448647156688,
+      0.5468725530676364,
+      0.21082782033215242
+     ],
+     "distance": 0.9235772083975198,
+     "team": 284
+    }
+   ],
+   "target": [
+    0.0,
+    0.0,
+    1.1132110783461595
+   ]
+  },
+  {
+   "ranking": [
+    {
+     "contrib": [
+      0.20255977383755155,
+      0.0005351352887177809,
+      0.014193424896786527
+     ],
+     "distance": 0.4661419676697818,
+     "team": 250
+    },
+    {
+     "contrib": [
+      0.2236214163818853,
+      0.0033176738637447126,
+      0.02520658389715958
+     ],
+     "distance": 0.5021410898769285,
+     "team": 115
+    },
+    {
+     "contrib": [
+      0.05561238203459312,
+      0.12593325123590324,
+      0.24828076025905252
+     ],
+     "distance": 0.6556114653737752,
+     "team": 292
+    },
+    {
+     "contrib": [
+      0.040722322123251865,
+      0.014313375939175829,
+      0.4286133636284051
+     ],
+     "distance": 0.6954488203245677,
+     "team": 334
+    },
+    {
+     "contrib": [
+      0.09529448647156688,
+      0.41003855787403487,
+      0.1639530735677144
+     ],
+     "distance": 0.8180990880775483,
+     "team": 284
+    },
+    {
+     "contrib": [
+      1.2482547198585656,
+      0.014313375939175829,
+      0.0003637509231067877
+     ],
+     "distance": 1.1238024055503921,
+     "team": 388
+    },
+    {
+     "contrib": [
+      0.8684880605210809,
+      0.4442265096031398,
+      0.02073364283972652
+     ],
+     "distance": 1.1547502816470525,
+     "team": 214
+    },
+    {
+     "contrib": [
+      0.694892757059604,
+      0.014313375939175829,
+      0.6807077212641949
+     ],
+     "distance": 1.1789460777588492,
+     "team": 331
+    },
+    {
+     "contrib": [
+      0.08091003029274783,
+      0.10543838595035059,
+      1.2274813046141733
+     ],
+     "distance": 1.189045718573206,
+     "team": 270
+    },
+    {
+     "contrib": [
+      0.15598078501639673,
+      0.7828524854242165,
+      0.626258447882591
+     ],
+     "distance": 1.2510362577971927,
+     "team": 184
+    },
+    {
+     "contrib": [
+      0.6217670093209199,
+      0.017872613939261834,
+      1.1743551840477495
+     ],
+     "distance": 1.3468462448653638,
+     "team": 236
+    }
+   ],
+   "target": [
+    0.0,
+    0.15937636331921134,
+    0.993116238302582
+   ]
+  },
+  {
+   "ranking": [
+    {
+     "contrib": [
+      0.2236214163818853,
+      0.0033176738637447126,
+      0.02520658389715958
+     ],
+     "distance": 0.5021410898769285,
+     "team": 115
+    },
+    {
+     "contrib": [
+      0.05561238203459312,
+      0.12593325123590324,
+      0.24828076025905252
+     ],
+     "distance": 0.6556114653737752,
+     "team": 292
+    },
+    {
+     "contrib": [
+      0.040722322123251865,
+      0.014313375939175829,
+      0.4286133636284051
+     ],
+     "distance": 0.6954488203245677,
+     "team": 334
+    }
+   ],
+   "target": [
+    0.0,
+    0.15937636331921134,
+    0.993116238302582
+   ]
+  }
+ ],
+ "name": "subset_and_order",
+ "params": {
+  "alliance_size": 3,
+  "coefficients": [
+   -1.163226,
+   -0.629288,
+   -0.488006
+  ],
+  "features": [
+   "endgame_opr",
+   "defense",
+   "auto_opr"
+  ],
+  "normalization": {
+   "constant_column_value": 0.0,
+   "constant_std_threshold": 1e-12,
+   "method": "zscore",
+   "scope": "event",
+   "std": "population"
+  },
+  "schema_version": 1,
+  "scouting_prior_strength": 5.0,
+  "source": "synthetic-test-fixture",
+  "trained_on": {
+   "synthetic": true
+  },
+  "weights": [
+   0.408806,
+   0.387147,
+   0.204047
+  ],
+  "winning_profile": [
+   0.572012,
+   1.332027,
+   0.962148
+  ]
+ },
+ "pool": [
+  115,
+  182,
+  184,
+  214,
+  222,
+  236,
+  250,
+  270,
+  284,
+  292,
+  331,
+  334,
+  388
+ ],
+ "scouting": [
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 0,
+   "fouls": 3,
+   "team_num": 292
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 1,
+   "fouls": 0,
+   "team_num": 214
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 0,
+   "fouls": 0,
+   "team_num": 214
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 0,
+   "fouls": 2,
+   "team_num": 250
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 2,
+   "fouls": 0,
+   "team_num": 292
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 1,
+   "fouls": 3,
+   "team_num": 115
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 1,
+   "fouls": 2,
+   "team_num": 214
+  },
+  {
+   "bricked": 0,
+   "climbed": 0,
+   "defense_rating": 2,
+   "fouls": 0,
+   "team_num": 292
+  },
+  {
+   "bricked": 0,
+   "climbed": 0,
+   "defense_rating": 3,
+   "fouls": 2,
+   "team_num": 106
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 2,
+   "fouls": 1,
+   "team_num": 292
+  },
+  {
+   "bricked": 0,
+   "climbed": 0,
+   "defense_rating": 2,
+   "fouls": 0,
+   "team_num": 292
+  },
+  {
+   "bricked": 1,
+   "climbed": 0,
+   "defense_rating": 2,
+   "fouls": 0,
+   "team_num": 115
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 3,
+   "fouls": 1,
+   "team_num": 284
+  },
+  {
+   "bricked": 0,
+   "climbed": 0,
+   "defense_rating": 3,
+   "fouls": 2,
+   "team_num": 222
+  },
+  {
+   "bricked": 0,
+   "climbed": 0,
+   "defense_rating": 2,
+   "fouls": 3,
+   "team_num": 236
+  },
+  {
+   "bricked": 1,
+   "climbed": 0,
+   "defense_rating": 1,
+   "fouls": 2,
+   "team_num": 184
+  },
+  {
+   "bricked": 0,
+   "climbed": 0,
+   "defense_rating": 3,
+   "fouls": 0,
+   "team_num": 106
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 1,
+   "fouls": 1,
+   "team_num": 292
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 0,
+   "fouls": 0,
+   "team_num": 222
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 0,
+   "fouls": 3,
+   "team_num": 184
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 3,
+   "fouls": 0,
+   "team_num": 236
+  },
+  {
+   "bricked": 1,
+   "climbed": 1,
+   "defense_rating": 3,
+   "fouls": 2,
+   "team_num": 250
+  },
+  {
+   "bricked": 0,
+   "climbed": 0,
+   "defense_rating": 3,
+   "fouls": 2,
+   "team_num": 106
+  },
+  {
+   "bricked": 0,
+   "climbed": 0,
+   "defense_rating": 1,
+   "fouls": 0,
+   "team_num": 182
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 0,
+   "fouls": 1,
+   "team_num": 236
+  },
+  {
+   "bricked": 0,
+   "climbed": 0,
+   "defense_rating": 2,
+   "fouls": 0,
+   "team_num": 214
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 1,
+   "fouls": 3,
+   "team_num": 270
+  },
+  {
+   "bricked": 0,
+   "climbed": 0,
+   "defense_rating": 0,
+   "fouls": 1,
+   "team_num": 250
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 2,
+   "fouls": 1,
+   "team_num": 182
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 3,
+   "fouls": 2,
+   "team_num": 250
+  },
+  {
+   "bricked": 1,
+   "climbed": 0,
+   "defense_rating": 2,
+   "fouls": 3,
+   "team_num": 222
+  },
+  {
+   "bricked": 0,
+   "climbed": 0,
+   "defense_rating": 1,
+   "fouls": 3,
+   "team_num": 222
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 2,
+   "fouls": 3,
+   "team_num": 106
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 1,
+   "fouls": 3,
+   "team_num": 236
+  },
+  {
+   "bricked": 0,
+   "climbed": 0,
+   "defense_rating": 2,
+   "fouls": 3,
+   "team_num": 236
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 1,
+   "fouls": 3,
+   "team_num": 182
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 0,
+   "fouls": 3,
+   "team_num": 182
+  },
+  {
+   "bricked": 0,
+   "climbed": 0,
+   "defense_rating": 0,
+   "fouls": 1,
+   "team_num": 292
+  },
+  {
+   "bricked": 1,
+   "climbed": 0,
+   "defense_rating": 0,
+   "fouls": 0,
+   "team_num": 182
+  },
+  {
+   "bricked": 0,
+   "climbed": 1,
+   "defense_rating": 1,
+   "fouls": 1,
+   "team_num": 182
+  }
+ ],
+ "snapshot": [
+  {
+   "auto_opr": 2.8348,
+   "endgame_opr": 16.8985,
+   "team": 106,
+   "teleop_opr": 19.4936
+  },
+  {
+   "auto_opr": 10.8294,
+   "endgame_opr": 7.3576,
+   "team": 115,
+   "teleop_opr": 14.4712
+  },
+  {
+   "auto_opr": 13.3112,
+   "endgame_opr": 19.0205,
+   "team": 182,
+   "teleop_opr": 30.9554
+  },
+  {
+   "auto_opr": 4.9551,
+   "endgame_opr": 7.9885,
+   "team": 184,
+   "teleop_opr": 23.4563
+  },
+  {
+   "auto_opr": 13.6408,
+   "endgame_opr": 18.7288,
+   "team": 214,
+   "teleop_opr": 33.9682
+  },
+  {
+   "auto_opr": 13.3385,
+   "endgame_opr": 11.1232,
+   "team": 222,
+   "teleop_opr": 17.0655
+  },
+  {
+   "auto_opr": 2.2407,
+   "endgame_opr": 4.8027,
+   "team": 236,
+   "teleop_opr": 19.5935
+  },
+  {
+   "auto_opr": 11.1974,
+   "endgame_opr": 14.8284,
+   "team": 250,
+   "teleop_opr": 33.9964
+  },
+  {
+   "auto_opr": 2.0156,
+   "endgame_opr": 13.4878,
+   "team": 270,
+   "teleop_opr": 25.212
+  },
+  {
+   "auto_opr": 8.5437,
+   "endgame_opr": 13.6841,
+   "team": 284,
+   "teleop_opr": 25.1916
+  },
+  {
+   "auto_opr": 7.6767,
+   "endgame_opr": 9.2765,
+   "team": 292,
+   "teleop_opr": 17.0858
+  },
+  {
+   "auto_opr": 4.6423,
+   "endgame_opr": 4.4378,
+   "team": 331,
+   "teleop_opr": 10.4361
+  },
+  {
+   "auto_opr": 6.2243,
+   "endgame_opr": 12.8188,
+   "team": 334,
+   "teleop_opr": 37.9967
+  },
+  {
+   "auto_opr": 12.4808,
+   "endgame_opr": 2.1418,
+   "team": 388,
+   "teleop_opr": 12.5748
+  }
+ ]
+}

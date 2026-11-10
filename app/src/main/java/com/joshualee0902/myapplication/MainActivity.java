@@ -15,5 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button start = findViewById(R.id.start);
         start.setOnClickListener(v -> startActivity(new Intent(this, Screen2.class)));
+        ((Button) findViewById(R.id.allianceSelection)).setOnClickListener(v ->
+                startActivity(new Intent(this, AllianceSelectionActivity.class)));
     }
 }

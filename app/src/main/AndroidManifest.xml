@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <activity android:name=".AllianceSelectionActivity" android:exported="false" />
         <activity android:name=".Screen2" android:exported="false" />
         <activity android:name=".Screen3" android:exported="false" />
         <activity android:name=".Screen4" android:exported="false" />

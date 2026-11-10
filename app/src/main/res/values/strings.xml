@@ -55,4 +55,11 @@
     <string name="saved_count">Saved matches: %1$d</string>
     <string name="decrease">Decrease</string>
     <string name="increase">Increase</string>
+    <string name="alliance_selection">Alliance Selection</string>
+    <string name="your_team">Your team #</string>
+    <string name="rank_partners">Rank partners</string>
+    <string name="import_snapshot">Import TBA snapshot</string>
+    <string name="reset_draft">Reset</string>
+    <string name="pick">Pick</string>
+    <string name="gone">Gone</string>
 </resources>

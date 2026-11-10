@@ -32,7 +32,7 @@ from analytics.features import TBA_FEATURES, feature_table
 from analytics.matching import (distance_weights, fit_weights, rank_by_value, rank_candidates,
                                 target_profile, winning_profile)
 from analytics.opr import (DEFAULT_HORIZON, DEFAULT_LAMS, alliance_scores, design_matrix,
-                           evaluate_event_k, event_teams, fit_opr, fit_ridge, sort_qual)
+                           evaluate_event_k, event_teams, fit_opr, fit_ridge, sort_qual, team_ratings)
 
 DEFAULT_LAM = 3.0          # fixed constant used only when there is no earlier event to tune on
 METHODS = ("knn", "opr", "seeding")
@@ -89,6 +89,7 @@ class EventBundle:
 
     def __init__(self, key, start, qm, lam, alliances, playoff, rankings):
         self.key, self.start, self.lam = key, start, lam
+        self.ratings = team_ratings(qm, lam)[list(TBA_FEATURES)]   # raw, un-z-scored (for snapshot export)
         self.feats = feature_table(qm, lam)
         self.oprs = opr_table(qm, lam)
         self.rank = rankings.set_index("team")["rank"] if len(rankings) else pd.Series(dtype=float)
