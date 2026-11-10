@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install pinned dependencies
+        run: pip install -e ".[dev]"
+      - name: Python tests (includes Java/Python parity fixture check)
+        run: python -m pytest -q
+      - name: README results block matches reports/
+        run: python -m analytics.report --check
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      # Gradle 8.7 is installed explicitly; the committed wrapper jar is old.
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.7"
+      - name: Android unit tests (MatchRecord, CSV, matching engine, parity)
+        run: gradle :app:testDebugUnitTest --no-daemon
+      # Espresso (connectedDebugAndroidTest) needs an emulator and is not run in CI.
