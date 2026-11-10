@@ -1,6 +1,6 @@
 PY ?= .venv/bin/python
 
-.PHONY: setup data opr-eval backtest export test
+.PHONY: setup data opr-eval backtest export report all test
 
 setup:
 	python3 -m venv .venv
@@ -24,6 +24,13 @@ backtest:
 # Add ARGS="--snapshot 2020xxxx" to also write reports/snapshot_<event>.csv for the app's import.
 export:
 	$(PY) -m analytics.export $(ARGS)
+
+# Rewrites the results block in README.md from reports/ (and docs/screenshots/).
+report:
+	$(PY) -m analytics.report
+
+# Everything that produces a reported number, in order. Needs TBA_API_KEY.
+all: data opr-eval backtest export report
 
 test:
 	$(PY) -m pytest -q
