@@ -20,3 +20,5 @@ __pycache__/
 .env
 analytics/cache/
 .DS_Store
+
+data/

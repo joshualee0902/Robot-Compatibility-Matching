@@ -1,0 +1,20 @@
+[
+ {
+  "key": "2020test",
+  "name": "Synthetic Regional",
+  "event_type": 0,
+  "start_date": "2020-03-01"
+ },
+ {
+  "key": "2020off",
+  "name": "Synthetic Offseason",
+  "event_type": 99,
+  "start_date": "2020-10-01"
+ },
+ {
+  "key": "2020cancel",
+  "name": "Synthetic Cancelled",
+  "event_type": 0,
+  "start_date": "2020-04-01"
+ }
+]
