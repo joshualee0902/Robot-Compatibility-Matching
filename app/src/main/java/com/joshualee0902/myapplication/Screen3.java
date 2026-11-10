@@ -1,72 +1,43 @@
 package com.joshualee0902.myapplication;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 
-import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+/** Autonomous period. */
+public class Screen3 extends FlowActivity {
 
-public class Screen3 extends AppCompatActivity {
+    private CheckBox crossed;
+    private CounterView upper;
+    private CounterView lower;
 
-    Button next2;
-    Button back1;
-    CheckBox checkCrossedLine;
-    public static String didCrossLine;
-    ElegantNumberButton upperScore;
-    ElegantNumberButton lowerScore;
-    public static String autoUpper;
-    public static String autoLower;
+    @Override
+    protected int layoutId() {
+        return R.layout.activity_screen3;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_screen3);
-
-        next2 = findViewById(R.id.next2);
-        next2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                passData();
-                openScreen4();
-                finish();
-            }
-        });
-
-        back1 = findViewById(R.id.back1);
-        back1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openScreen2();
-            }
-        });
-
+        crossed = findViewById(R.id.checkCrossedLine);
+        upper = findViewById(R.id.AutoUpper);
+        lower = findViewById(R.id.AutoLower);
+        ((Button) findViewById(R.id.next2)).setOnClickListener(v -> goNext(Screen4.class));
+        ((Button) findViewById(R.id.back1)).setOnClickListener(v -> goBack());
+        start();
     }
 
-
-    public void passData() {
-        checkCrossedLine = findViewById(R.id.checkCrossedLine);
-        upperScore = findViewById(R.id.AutoUpper);
-        lowerScore = findViewById(R.id.AutoLower);
-        if(checkCrossedLine.isChecked()) {
-            didCrossLine = "1";
-        } else {
-            didCrossLine = "0";
-        }
-        autoUpper = upperScore.getNumber();
-        autoLower = lowerScore.getNumber();
+    @Override
+    protected void readInputs() {
+        record.crossLine = crossed.isChecked();
+        record.autoUpper = upper.getValue();
+        record.autoLower = lower.getValue();
     }
 
-    public void openScreen4() {
-        Intent intent3 = new Intent(this, Screen4.class);
-        startActivity(intent3);
-    }
-
-    public void openScreen2() {
-        Intent intent4 = new Intent(this, Screen2.class);
-        startActivity(intent4);
+    @Override
+    protected void populate() {
+        crossed.setChecked(record.crossLine);
+        upper.setValue(record.autoUpper);
+        lower.setValue(record.autoLower);
     }
 }
