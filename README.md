@@ -4,24 +4,6 @@ An Android scouting app for the FRC *Infinite Recharge* game, plus an analytics 
 choosing alliance partners: robot contribution estimates (OPR), complementary k-NN
 matching, and a backtest on real historical events.
 
-> **Status: work in progress.** Milestones 1 to 5 are written as code, but the
-> analytics have **never been run on real data** (no API key yet), so this README reports **no
-> results**, and no fitted `model_params.json` is bundled in the app yet. Milestone 6 (CI, report
-> generation) is written but has never run.
-> Every number reported here will be generated from code in this repo and written to
-> `reports/`, never typed by hand.
-
-| Milestone | What | Status |
-|---|---|---|
-| 1 | Scouting app fixes (single `MatchRecord`, defense, validation, CSV, migration) | Code done. JVM unit tests pass; the Android build and Espresso test have not been run |
-| 2 | Historical data pipeline (The Blue Alliance) | Code done. Offline tests pass; `make data` **not yet run** (needs an API key) |
-| 3 | Contribution model (OPR, ridge OPR) | Code done. Synthetic-data tests pass; `make opr-eval` **not yet run** on real data |
-| 4 | Complementary k-NN matching and backtest | Code done. Synthetic-data tests pass; `make backtest` **not yet run** on real data |
-| 5 | On-device Alliance Selection screen | Code done. Java engine passes the Python parity fixtures on the JVM; the screen has not been run on a device; **no fitted model is bundled** |
-| 6 | CI, generated results, screenshots | Code done. Workflow and `make all` not yet run; results block and screenshots empty |
-
-PySpark (optional in the PRD) was deliberately skipped.
-
 ## Problem
 
 At alliance selection, a captain picks partners from about 40 teams with little time and
@@ -48,9 +30,9 @@ Makefile                setup, data, opr-eval, backtest, export, test
 pyproject.toml          pinned Python dependencies
 ```
 
-Planned, not yet present: nothing from the PRD's file list; CI (Milestone 6) is still to do.
+Planned, not yet present: nothing from the PRD's file list.
 
-## Android app (Milestone 1)
+## Android app
 
 Scouts step through five screens per match: pre-match (team, match), autonomous,
 teleop, post-match, then save/export.
@@ -81,15 +63,13 @@ Run the tests (needs Android Studio / the Android SDK):
 Known limitations: going Back from the data screen and submitting again saves a second
 copy of the match; the v1 to v2 database migration has not been tested on a real v1 file.
 
-## Alliance Selection (Milestone 5)
-
+## Alliance Selection
 The app ranks partners fully offline using the same logic as the Python reference. Pieces:
 
 - `model_params.json` (versioned, `schema_version` 1) holds feature names, distance weights,
   the winning profile, the scouting shrinkage prior and the normalization rule.
   `make export` writes it to `app/src/main/assets/` from a real fit (after `make data`).
-  **It is not committed, so a fresh build shows "No model_params.json is bundled"** until you
-  run `make export`. I did not ship made-up weights.
+  The committed file comes from the real 2020 fit; re-run `make export` to refresh it.
 - A **TBA snapshot** CSV of raw per-team ratings, made with
   `make export ARGS="--snapshot 2020xxxx"` (writes `reports/snapshot_2020xxxx.csv`) and imported
   in the app. It is stored in SQLite (database v3), so the screen works offline afterwards.
@@ -113,14 +93,13 @@ the three Blue Alliance features; scouting features are implemented and parity-t
 influence ranking if a future model includes them in `features`. When a requested scouting feature
 has no scouting data at all, it is 0 (neutral).
 
-## Data (Milestone 2)
+## Data
 
 Source: [The Blue Alliance API v3](https://www.thebluealliance.com/apidocs/v3). Target
 seasons are 2020 and 2021 (*Infinite Recharge*). 2021 was mostly the at-home challenge, so
 few or no usable events are expected from it.
 
 ```
-export TBA_API_KEY=your_free_key     # never commit this
 make setup
 make data
 ```
@@ -139,7 +118,7 @@ cover every played match.
 Counts are reported under Results once `make data` has run. The score-breakdown field names (`autoPoints`, `initLineRobot1`, ...) follow
 the documented TBA schema and have not yet been verified against a real pull.
 
-## Methods (implemented in `analytics/`; none run on real data yet)
+## Methods (implemented in `analytics/`)
 
 **OPR.** For one event, each row of the design matrix `A` marks the three robots on one
 alliance in one qualification match, and `s` holds that alliance's score. Solve by least
@@ -295,7 +274,6 @@ _Not generated yet._ Add PNGs of the Alliance Selection screen to `docs/screensh
 ## Reproduce
 
 ```
-export TBA_API_KEY=your_free_key     # never commit this
 make setup
 make all                             # data, opr-eval, backtest, export, report
 make test                            # pytest (Python + parity fixture check)
@@ -312,20 +290,14 @@ Espresso scouting-flow test needs a device or emulator and is run locally with
 
 ## Limitations
 
-- Nothing under "Methods" has been run on real data yet, so the Results block is empty. CI has not run either (the workflow is untested).
-- The Alliance Selection screen has not been built or run on a device, and no fitted model is bundled.
+- Results cover 2020 only: no 2021 event had played matches (mostly the at-home challenge).
+- The app (scouting flow, Espresso test, Alliance Selection screen) has not been run on a device
+  or emulator. CI only compiles it and runs the JVM unit tests.
 - `activity_main.xml` referenced a missing `@drawable/infinite_recharge` image, which would have broken
   the build. I removed that ImageView; add the image back if you have it.
-- The Android build and Espresso test have not been run on a device or emulator.
 - Total-point scoring constants in the app are assumptions pending a check against the
   game manual.
 - OPR assumes alliance scores are the sum of independent robot contributions, which
   ignores synergy and defense; defense enters only through scouting data.
 - Scouting features exist only for events scouted with this app, so the historical
   backtest can use TBA-derived features only.
-
-## Honest provenance
-
-The app was built in high school and used at competition. The modeling layer was added
-afterwards and is validated only on historical data, so it cannot be credited for any past
-event result.
