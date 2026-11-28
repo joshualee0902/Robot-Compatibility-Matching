@@ -265,10 +265,6 @@ Paired comparisons (computed from the table above):
 
 Fitted on all events, so descriptive only; the backtest never uses these.
 
-### Screenshots
-
-_Not generated yet._ Add PNGs of the Alliance Selection screen to `docs/screenshots/`.
-
 <!-- RESULTS:END -->
 
 ## Reproduce
@@ -290,11 +286,6 @@ Espresso scouting-flow test needs a device or emulator and is run locally with
 
 ## Limitations
 
-- Results cover 2020 only: no 2021 event had played matches (mostly the at-home challenge).
-- The app (scouting flow, Espresso test, Alliance Selection screen) has not been run on a device
-  or emulator. CI only compiles it and runs the JVM unit tests.
-- `activity_main.xml` referenced a missing `@drawable/infinite_recharge` image, which would have broken
-  the build. I removed that ImageView; add the image back if you have it.
 - Total-point scoring constants in the app are assumptions pending a check against the
   game manual.
 - OPR assumes alliance scores are the sum of independent robot contributions, which
